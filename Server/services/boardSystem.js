@@ -110,17 +110,38 @@ module.exports = {
     // 게시물 클릭시 상세보기 -> PK로 검색
     selectPost: async (postNum) => {
         return new Promise((resolve, reject) => {
-            const query = `select * from board where num='${postNum}'`;
+            try {
+                const query = `select * from board where num='${postNum}'`;
+    
+                db.query(query, async (err, result) => {
+                    if (err){
+                        console.log('Error while select from board with num : ', err.message);
+                        reject(err);
+                        return;
+                    }
+                    
+                    // 원본 이미지 가져오기
+                    const postData = {};
+                    const getOriginalImg = async (data) => {
+                        const filePath = path.join(__dirname, '..', 'public', data.image_name);
+                        const fileContent = await fs.readFile(filePath, 'base64');
 
-            db.query(query, (err, result) => {
-                if (err){
-                    console.log('Error while select from board with num : ', err.message);
-                    reject(err);
-                    return;
-                }
+                        postData['num'] = data.num;
+                        postData['title'] = data.title;
+                        postData['content'] = data.content;
+                        postData['original_image'] = fileContent;
+                        postData['regist_date'] = data.regist_date;
+                        postData['user_id'] = data.user_id;
+                    }
 
-                resolve(result[0]);
-            })
+                    await getOriginalImg(result[0]);
+                    resolve(postData);
+                })
+
+            } catch (error) {
+                console.log('Error : ', error.message);
+                reject(error);
+            }
         })
     }
 }
