@@ -1,10 +1,11 @@
 # IPLMarket_BE ML
-## Installation
 
-### Requirements
+## Requirements
 Python 3.9+
 torch (Tested 1.13.1+cu116)
 torchvision (Tested 0.14.1+cu116)
+
+## Installation
 
 ### Create Conda Environment
 ```
@@ -17,6 +18,7 @@ pip install torch==1.13.1+cu116 torchvision==0.14.1+cu116 torchaudio==0.13.1 --e
 ### Install Project Dependencies & Make Config File
 ```
 pip install python-dotenv
+pip install python-socketio
 ```
 
 Make `.env` file
@@ -64,6 +66,7 @@ git clone https://github.com/NVlabs/nvdiffrecmc.git
 ```
 
 ## Run
+
 
 ## Acknowledgements
 This project is based on the following repositories:
