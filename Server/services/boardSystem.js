@@ -183,4 +183,20 @@ module.exports = {
             }
         })
     },
+
+    // 사용자가 특정 게시물 좋아요 눌렀는지 판별
+    isClickedLike: async (data) => {
+        return new Promise((resolve, reject) => {
+            const query = `select * from likes where post_num='${data.postNum}' and user_id='${data.id}'`;
+
+            db.query(query, (err, result) => {
+                if (err) {
+                    console.log('Error while select from likes : ', err.message);
+                    reject(err);
+                } else {
+                    resolve(result.length > 0); // 게시물의 좋아요를 눌렀는지 표시 위함
+                }
+            });
+        });
+    }
 }
