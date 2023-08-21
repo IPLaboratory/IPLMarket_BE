@@ -36,7 +36,6 @@ Create Tables named with the following configuration
 ```
 
 ```sql
--- SQL
 CREATE TABLE users (
     id varchar(20) NOT NULL PRIMARY KEY,
     pwd varchar(60) NOT NULL,
@@ -61,7 +60,6 @@ CREATE TABLE users (
 ```
 
 ```sql
--- SQL
 CREATE TABLE board (
     num int NOT NULL PRIMARY KEY AUTO_INCREMENT,
     title varchar(100) NOT NULL,
@@ -85,7 +83,6 @@ CREATE TABLE board (
 ```
 
 ```sql
--- SQL
 CREATE TABLE likes (
     like_id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
     post_num int NOT NULL,
@@ -94,6 +91,7 @@ CREATE TABLE likes (
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 ```
+
 
 Start the application
 ---
