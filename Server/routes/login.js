@@ -25,7 +25,7 @@ router.post('/idcheck', async (req, res) => {
     }
 });
 
-// 로그인 라우터
+// 로그인 라우터 
 router.post('/userLogin', async (req, res) => {
     const userData = req.body;
     const result = await loginSystem.login(userData);
