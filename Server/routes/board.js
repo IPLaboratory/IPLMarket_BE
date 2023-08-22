@@ -25,5 +25,18 @@ router.post('/boardlist', (req, res) => {
         })
 });
 
+// 게시물 등록 요청
+router.post('/regist', (req, res) => {
+    const postData = req.body;
+
+    boardSystem.insertPost(postData)
+        .then((result) => {
+            res.status(201).json({success: true, message: result});
+        })
+        .catch((error) => {
+            res.status(500).json({success: true, message: 'Error'});
+        })
+});
+
 
 module.exports = router;
