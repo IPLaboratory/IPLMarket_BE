@@ -43,6 +43,7 @@ module.exports = {
                             num: data.num,
                             title: data.title,
                             content: data.content,
+                            price: data.price,
                             thumbnail_image: fileContent,
                             regist_date: data.regist_date,
                             user_id: data.user_id
@@ -69,7 +70,7 @@ module.exports = {
     // 게시물 등록
     insertPost: async (postData) => {
         return new Promise((resolve, reject) => {
-            const query = `insert into board values (null, '${postData.title}', '${postData.content}',
+            const query = `insert into board values (null, '${postData.title}', '${postData.content}', '${postData.price}',
                         '${postData.image_name}', now(), '${postData.user_id}')`;
 
             db.query(query, (err, result) => {
@@ -128,6 +129,7 @@ module.exports = {
                         postData['num'] = data.num;
                         postData['title'] = data.title;
                         postData['content'] = data.content;
+                        postData['price'] = data.price;
                         postData['original_image'] = fileContent;
                         postData['regist_date'] = data.regist_date;
                         postData['user_id'] = data.user_id;
@@ -168,6 +170,7 @@ module.exports = {
                         postData['num'] = data.num;
                         postData['title'] = data.title;
                         postData['content'] = data.content;
+                        postData['price'] = data.price;
                         postData['thumbnail_image'] = fileContent;
                         postData['regist_date'] = data.regist_date;
                         postData['user_id'] = data.user_id;
@@ -184,7 +187,6 @@ module.exports = {
         })
     },
 
-    // 사용자가 특정 게시물 좋아요 눌렀는지 판별
     isClickedLike: async (data) => {
         return new Promise((resolve, reject) => {
             const query = `select * from likes where post_num='${data.postNum}' and user_id='${data.id}'`;
