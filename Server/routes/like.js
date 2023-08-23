@@ -26,4 +26,29 @@ router.post('/click', (req, res) => {
     })
 });
 
+// 내가 좋아요 한 게시물 리스트 요청
+router.post('/mylist', async (req, res) => {
+    const userData = req.body;
+
+    try {
+        const likeList = await likeSystem.myLikesList(userData); // 
+        const postDetails = [];
+
+        for (const post of likeList) {
+            try {
+                const postNum = post.post_num;
+                const postDetail = await boardSystem.selectPostWithThumb(postNum);
+
+                postDetails.push(postDetail);
+            } catch (error) {
+                throw error;
+            }
+        }
+
+        res.status(200).json(postDetails);
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
 module.exports = router;
