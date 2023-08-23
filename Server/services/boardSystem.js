@@ -16,13 +16,13 @@ module.exports = {
 
                 db.query(query, async (err, results) => {
                     if (err){
-                        console.log('Error : ', err.message);
+                        console.log('Error while select from board : ', err.message);
                         reject(err);
                         return;
                     }
                     
                     const posts = []
-                    const imageProcess = async (data) => {
+                    const getThumbnail = async (data) => {
                         let originalName = data.image_name;
                         let newName;
 
@@ -36,7 +36,6 @@ module.exports = {
                         data.image_name = newName;
 
                         // 썸네일 이미지 인코딩
-                        
                         const filePath = path.join(__dirname, '..', 'public', data.image_name);
                         const fileContent = await fs.readFile(filePath, 'base64');
 
@@ -44,17 +43,17 @@ module.exports = {
                             num: data.num,
                             title: data.title,
                             content: data.content,
-                            thumnail_image: fileContent,
+                            thumbnail_image: fileContent,
                             regist_date: data.regist_date,
                             user_id: data.user_id
                         };
-                        
+
                         posts.push(modifiedData);
                     };
     
                     // 리사이징 한 이미지를 뱉어줘야 함
                     for (const data of results) {
-                        await imageProcess(data);
+                        await getThumbnail(data);
                     }
     
                     resolve(posts);
@@ -107,8 +106,8 @@ module.exports = {
         });
     },
 
-    // 게시물 클릭시 상세보기 -> PK로 검색
-    selectPost: async (postNum) => {
+    // 게시물 클릭시 상세보기 -> PK로 검색, 원본 이미지로
+    selectPostWithOrigin: async (postNum) => {
         return new Promise((resolve, reject) => {
             try {
                 const query = `select * from board where num='${postNum}'`;
@@ -120,7 +119,7 @@ module.exports = {
                         return;
                     }
                     
-                    // 원본 이미지 가져오기
+                    // 원본 이미지 인코딩하여 가져오기
                     const postData = {};
                     const getOriginalImg = async (data) => {
                         const filePath = path.join(__dirname, '..', 'public', data.image_name);
@@ -136,12 +135,68 @@ module.exports = {
 
                     await getOriginalImg(result[0]);
                     resolve(postData);
-                })
+                });
 
             } catch (error) {
                 console.log('Error : ', error.message);
                 reject(error);
             }
         })
+    },
+
+     // 게시물 데이터 가져오기 -> PK로 검색, 썸네일 이미지로
+     selectPostWithThumb: async (postNum) => {
+        return new Promise((resolve, reject) => {
+            try {
+                const query = `select * from board where num='${postNum}'`;
+    
+                db.query(query, async (err, result) => {
+                    if (err){
+                        console.log('Error while select from board with num : ', err.message);
+                        reject(err);
+                        return;
+                    }
+                    
+                    // 썸네일 이미지 인코딩하여 가져오기
+                    const postData = {};
+                    const getOriginalImg = async (data) => {
+                        const originalName = data.image_name;
+                        const thumbnail_image = originalName.split(".")[0] + "_" + data.user_id + "_" + data.num + ".jpg";
+                        const filePath = path.join(__dirname, '..', 'public', thumbnail_image);
+                        const fileContent = await fs.readFile(filePath, 'base64');
+
+                        postData['num'] = data.num;
+                        postData['title'] = data.title;
+                        postData['content'] = data.content;
+                        postData['thumbnail_image'] = fileContent;
+                        postData['regist_date'] = data.regist_date;
+                        postData['user_id'] = data.user_id;
+                    }
+
+                    await getOriginalImg(result[0]);
+                    resolve(postData);
+                });
+
+            } catch (error) {
+                console.log('Error : ', error.message);
+                reject(error);
+            }
+        })
+    },
+
+    // 사용자가 특정 게시물 좋아요 눌렀는지 판별
+    isClickedLike: async (data) => {
+        return new Promise((resolve, reject) => {
+            const query = `select * from likes where post_num='${data.postNum}' and user_id='${data.id}'`;
+
+            db.query(query, (err, result) => {
+                if (err) {
+                    console.log('Error while select from likes : ', err.message);
+                    reject(err);
+                } else {
+                    resolve(result.length > 0); // 게시물의 좋아요를 눌렀는지 표시 위함
+                }
+            });
+        });
     }
 }
