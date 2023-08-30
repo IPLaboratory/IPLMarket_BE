@@ -1,5 +1,6 @@
 import os
 import sys
+import shutil
 from glob import glob
 
 
@@ -7,14 +8,14 @@ ROOT_DIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 SCRIPTS_DIR = os.path.join(ROOT_DIR, 'scripts')
 
 
-def run_system(command):
+def run_system(command) -> None:
     error = os.system(command)
     if error:
         print(f'FATAL: Execute command failed "{command}"')
         sys.exit(error)
 
 
-def find_or_download_ffmpeg():
+def find_or_download_ffmpeg() -> str:
     ffmpeg_binary = 'ffmpeg'
 
     if os.system(f'where ffmpeg >nul 2>nul') != 0:
@@ -29,3 +30,8 @@ def find_or_download_ffmpeg():
             ffmpeg_binary = candidates[0]
 
     return ffmpeg_binary
+
+
+def ensure_path(path: str) -> None:
+    shutil.rmtree(path, ignore_errors=True)
+    os.makedirs(path)
