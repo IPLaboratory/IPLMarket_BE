@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const userRouter = require('./routes/login.js');
 const postRouter = require('./routes/board.js');
 const likeRouter = require('./routes/like.js');
+const modelRouter = require('./routes/model.js');
 
 dotenv.config();
 app.use(express.urlencoded({extended : true}));
@@ -19,6 +20,8 @@ app.use('/login', userRouter);
 app.use('/posts', postRouter);
 // 좋아요 기능 라우터
 app.use('/like', likeRouter);
+// AR 모델 로딩 라우터
+app.use('/model', modelRouter);
 
 // 서버 가동
 const server = app.listen(process.env.PORT, () => {
