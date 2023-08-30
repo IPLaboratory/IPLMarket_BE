@@ -73,7 +73,9 @@ module.exports = {
     insertPost: async (postData) => {
         return new Promise((resolve, reject) => {
             const query = `insert into board values (null, '${postData.title}', '${postData.content}', '${postData.price}',
+
                         '${postData.video_name}', '${postData.image_name}', now(), '${postData.user_id}')`;
+
 
             db.query(query, async (err, result) => {
                 if (err){
