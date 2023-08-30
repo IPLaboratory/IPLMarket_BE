@@ -82,7 +82,13 @@ module.exports = {
                     return;
                 }
 
-                /// TODO: 클라이언트에서 보낸 이미지를 먼저 저장하기.
+                // Base64로 인코딩된 이미지 디코딩 및 저장 경로 지정
+                const base64Image = Buffer.from(postData.image_data, 'base64');
+                const savePath = path.join(__dirname, '..', 'public', postData.image_name);
+
+                // 디코딩한 이미지 저장
+                await fs.writeFile(savePath, base64Image);
+                console.log('Save Complete : ' + savePath);
                 
                 // 리사이즈된 이미지 구분하기 위해 이름 형식 지정 => {클라이언트가 보낸 이미지 이름}_{DB에 저장된 PK}.확장자
                 const renaming = `${postData.image_name.split(".")[0]}_${postData.user_id}_${result.insertId}.jpg`;
