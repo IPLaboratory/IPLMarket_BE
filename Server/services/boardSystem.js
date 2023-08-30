@@ -1,6 +1,7 @@
 const db = require('../config/db.js');
 const sharp = require('sharp');
 const path = require('path');
+const { post } = require('../routes/model.js');
 const fs = require('fs').promises;
 
 module.exports = {
@@ -43,6 +44,8 @@ module.exports = {
                             num: data.num,
                             title: data.title,
                             content: data.content,
+                            price: data.price,
+                            video_name: data.video_name,
                             thumbnail_image: fileContent,
                             regist_date: data.regist_date,
                             user_id: data.user_id
@@ -69,17 +72,17 @@ module.exports = {
     // 게시물 등록
     insertPost: async (postData) => {
         return new Promise((resolve, reject) => {
-            const query = `insert into board values (null, '${postData.title}', '${postData.content}',
-                        '${postData.image_name}', now(), '${postData.user_id}')`;
+            const query = `insert into board values (null, '${postData.title}', '${postData.content}', '${postData.price}',
+                        '${postData.video_name}', '${postData.image_name}', now(), '${postData.user_id}')`;
 
-            db.query(query, (err, result) => {
+            db.query(query, async (err, result) => {
                 if (err){
                     console.log('Error while insert into board table : ', err.message);
                     reject(err);
                     return;
                 }
 
-                // TODO: 클라이언트에서 보낸 이미지를 먼저 저장하기.
+                /// TODO: 클라이언트에서 보낸 이미지를 먼저 저장하기.
                 
                 // 리사이즈된 이미지 구분하기 위해 이름 형식 지정 => {클라이언트가 보낸 이미지 이름}_{DB에 저장된 PK}.확장자
                 const renaming = `${postData.image_name.split(".")[0]}_${postData.user_id}_${result.insertId}.jpg`;
@@ -97,7 +100,7 @@ module.exports = {
                         }
                         
                         console.log(`Resize Image Info : ${JSON.stringify(info, null, 2)}`);
-                    })
+                    }) 
                     .toBuffer(); // 리사이즈 이미지를 노드에서 읽을 수 있도록 변환
 
                 
@@ -128,6 +131,8 @@ module.exports = {
                         postData['num'] = data.num;
                         postData['title'] = data.title;
                         postData['content'] = data.content;
+                        postData['price'] = data.price;
+                        postData['video_name'] = data.video_name;
                         postData['original_image'] = fileContent;
                         postData['regist_date'] = data.regist_date;
                         postData['user_id'] = data.user_id;
@@ -168,6 +173,8 @@ module.exports = {
                         postData['num'] = data.num;
                         postData['title'] = data.title;
                         postData['content'] = data.content;
+                        postData['price'] = data.price;
+                        postData['video_name'] = data.video_name;
                         postData['thumbnail_image'] = fileContent;
                         postData['regist_date'] = data.regist_date;
                         postData['user_id'] = data.user_id;
@@ -184,7 +191,6 @@ module.exports = {
         })
     },
 
-    // 사용자가 특정 게시물 좋아요 눌렀는지 판별
     isClickedLike: async (data) => {
         return new Promise((resolve, reject) => {
             const query = `select * from likes where post_num='${data.postNum}' and user_id='${data.id}'`;
