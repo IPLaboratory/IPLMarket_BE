@@ -1,2 +1,40 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+__pypackages__/
+*.py[cod]
+*$py.class
+
+# Python Environments
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# PyCharm
+.idea/
+
+# dotenv
 .env
-src
+
+# VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Base Dependencies
+src/
+
+# nvdiffrecmc
+data/*
+!data/irrmaps/
+!data/tets/
+!data/sphere.obj
+!data/sphere.mtl
