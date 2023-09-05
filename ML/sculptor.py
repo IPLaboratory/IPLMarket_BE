@@ -12,13 +12,13 @@ class Sculpter:
         self.visualize = enabled
 
 
-    def create(self, name: str, prompt: str, video_filename: str) -> None:
-        output_path = 'data'
+    def create(self, name: str, prompt: str, video_filename: str, output_path: str) -> None:
+        workspace = 'data'
 
-        preprocessor = Preprocess(name, video_filename, output_path)
+        preprocessor = Preprocess(name, video_filename, workspace)
         preprocessor.run(prompt)
 
         if self.visualize:
-            utils.run_system(f'python src/nvdiffrecmc/train.py --config {output_path}/{name}.json --display-interval 10')
+            utils.run_system(f'python src/nvdiffrecmc/train.py --config {workspace}/{name}.json -o {output_path} --display-interval 10')
         else:
-            utils.run_system(f'python src/nvdiffrecmc/train.py --config {output_path}/{name}.json')
+            utils.run_system(f'python src/nvdiffrecmc/train.py --config {workspace}/{name}.json -o {output_path}')

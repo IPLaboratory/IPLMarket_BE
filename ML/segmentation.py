@@ -21,9 +21,13 @@ class Segmentation:
     def save(self, prompt: str, image_filename: str, output_path: str) -> None:
         image = load_image(image_filename)
         mask, _, _, logits = self.model.predict(image, prompt)
-
-        # Find most confidence mask
         logits = logits.tolist()
+
+        # Skip if failed to predict
+        if not mask or not logits:
+            return
+        
+        # Find most confidence mask
         candidate = logits.index(max(logits))
 
         # Convert mask tensor to OpenCV image

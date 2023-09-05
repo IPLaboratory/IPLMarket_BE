@@ -1,13 +1,13 @@
 import os
+import shutil
 
 import socketio
-from dotenv import load_dotenv
 
+from utils import Environments
 from sculptor import Sculpter
 
 
 sio = socketio.Client()
-local_path = os.path.dirname(__file__)
 
 
 @sio.event
@@ -17,17 +17,22 @@ def connect():
 
 
 @sio.on('start modeling')
-def test(data):
-    name = data['name']
+def sculpt(data):
+    name = os.path.splitext(data['name'])[0]
     prompt = data['prompt']
     video = data['path']
 
+    video_filename = f'./data/{os.path.basename(video)}'
+    output_path = os.path.join('../Server', name)
+
+    shutil.copyfile(video, video_filename)
+
     sculpter = Sculpter()
-    sculpter.create(name, prompt, video)
+    sculpter.create(name, prompt, video_filename, output_path)
 
     sio.emit('ml message', {
         'status': 'modeling finished',
-        'path': os.path.join(local_path, 'out', name)
+        'path': output_path
     })
 
 
@@ -36,9 +41,6 @@ def disconnect():
     print('disconnected')
 
 
-
 if __name__ == '__main__':
-    load_dotenv()
-    server_address = os.getenv('SERVER_ADDRESS')
-
+    server_address = Environments.instance().get('SERVER_ADDRESS')
     sio.connect(server_address)
