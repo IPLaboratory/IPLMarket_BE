@@ -25,8 +25,6 @@ module.exports = {
     getModelFiles: async (postData) => {
         return new Promise(async (resolve, reject) => {
             try {
-
-                // 게시물 번호로 조회된 게시물 데이터 가져오기
                 const result = await module.exports.findPostsByNum(postData)
                                     .catch(error => reject(error.message));
                 
@@ -36,7 +34,8 @@ module.exports = {
 
                     // 해당 게시물 업로드 시 VR 모델링 작업에 필요한 영상 파일 이름으로 된 디렉토리있는지 검사
                     // 디렉토리 존재한다면 모델링 작업 완료된 것
-                    const directoryPath = path.join(__dirname, '..', posts.video_name);
+                    const directoryName = posts.video_name.split(".")[0];
+                    const directoryPath = path.join(__dirname, '..', directoryName);
 
                     try {
                         await fs.promises.access(directoryPath);
