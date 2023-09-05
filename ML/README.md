@@ -14,25 +14,6 @@ conda activate ml
 pip install torch==1.13.1+cu116 torchvision==0.14.1+cu116 torchaudio==0.13.1 --extra-index-url https://download.pytorch.org/whl/cu116
 ```
 
-### Install Project Dependencies
-```
-pip install python-dotenv
-pip install python-socketio
-```
-
-### Make Environment File
-Make `.env` file in `ML` Directory
-```
-SERVER_ADDRESS="YOUR IP ADDRESS"
-```
-
-
-### Create Directory for Dependencies
-```
-cd ML
-mkdir src && cd src
-```
-
 ### Install lang-segment-anything
 ```
 pip install -U git+https://github.com/luca-medeiros/lang-segment-anything.git
@@ -46,7 +27,23 @@ pip install ninja imageio PyOpenGL glfw xatlas gdown
 pip install git+https://github.com/NVlabs/nvdiffrast/
 pip install --global-option="--no-networks" git+https://github.com/NVlabs/tiny-cuda-nn#subdirectory=bindings/torch
 imageio_download_bin freeimage
+```
+```
+cd ML
+mkdir src && cd src
 git clone https://github.com/NVlabs/nvdiffrecmc.git
+```
+
+### Install Project Dependencies
+```
+pip install python-dotenv
+pip install python-socketio
+```
+
+### Make Environment File
+Make `.env` file in `ML` Directory
+```
+SERVER_ADDRESS="YOUR IP ADDRESS"
 ```
 
 ## Run

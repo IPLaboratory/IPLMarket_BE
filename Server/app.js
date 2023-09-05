@@ -2,13 +2,11 @@ const express = require('express');
 const app = express();
 const socketConnect = require('./socket.js');
 const dotenv = require('dotenv');
-const loginSystem = require('./services/loginSystem.js');
 const bodyParser = require('body-parser');
-const path = require('path');
-const boardSystem = require('./services/boardSystem.js');
-const like = require('./services/likeSystem.js');
 const userRouter = require('./routes/login.js');
 const postRouter = require('./routes/board.js');
+const likeRouter = require('./routes/like.js');
+const modelRouter = require('./routes/model.js');
 
 dotenv.config();
 app.use(express.urlencoded({extended : true}));
@@ -20,6 +18,10 @@ app.use('/public', express.static('public'));
 app.use('/login', userRouter);
 // 게시물 관련 라우터
 app.use('/posts', postRouter);
+// 좋아요 기능 라우터
+app.use('/like', likeRouter);
+// AR 모델 로딩 라우터
+app.use('/model', modelRouter);
 
 // 서버 가동
 const server = app.listen(process.env.PORT, () => {
@@ -52,14 +54,6 @@ socketConnect(server, app);
 //     image_name: 'cake1.jpg',
 //     user_id: 'test'
 // }
-
-boardSystem.selectPost(1)
-    .then((result) => {
-        console.log(result);
-    })
-    .catch((error) => {
-        console.log('Error: ', error.message);
-    })
 
 
 // const test = {

@@ -1,4 +1,5 @@
 const db = require('../config/db.js');
+const boardSystem = require('../services/boardSystem.js');
 
 module.exports = {
     // 좋아요 눌렀는지 검사
@@ -65,14 +66,14 @@ module.exports = {
         });
     },
 
-    // 내가 좋아요 한 게시물들 반환
+    // 내가 좋아요 한 게시물의 num 반환
     myLikesList: async (userData) => {
         return new Promise((resolve, reject) => {
-            const query = `select * from board where user_id='${userData.id}'`;
+            const query = `select * from likes where user_id='${userData.userId}'`;
 
-            db.query(query, (err, results) => {
+            db.query(query, async (err, results) => {
                 if (err) {
-                    console.log('Error while select boards by id : ', err.message);
+                    console.log('Error while select likes by id : ', err.message);
                     reject(err);
                 } else {
                     resolve(results);

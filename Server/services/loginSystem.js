@@ -42,11 +42,21 @@ module.exports = {
         }
     },
 
+    // 회원가입 기능
     registUser: async (userData) => {
         return new Promise((resolve, reject) => {
+            // 데이터 유효성 검증 -> 빈 문자열 있는지 검증
+            for (const key in userData) {
+                if (userData[key] === '') {
+                    reject (new Error(`Field '${key}' Is Empty`));
+                    return;
+                }
+            }
+
             // 비밀번호 암호화
             const encryptedPwd = bcrypt.hashSync(userData.pwd, saltRounds);
-            const query = `insert into users(id, pwd, u_name, nickname, phone_number) values('${userData.id}', '${encryptedPwd}', '${userData.name}', '${userData.nickname}', '${userData.phone_number}')`;
+            const query = `insert into users(id, pwd, u_name, nickname, phone_number) values(
+                '${userData.id}', '${encryptedPwd}', '${userData.name}', '${userData.nickname}', '${userData.phone_number}')`;
 
             db.query(query, (err, result) => {
                 if (err) {
