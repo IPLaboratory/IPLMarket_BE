@@ -1,7 +1,6 @@
 const db = require('../config/db.js');
 const sharp = require('sharp');
 const path = require('path');
-const { post } = require('../routes/model.js');
 const fs = require('fs').promises;
 
 module.exports = {
@@ -37,7 +36,7 @@ module.exports = {
                         data.image_name = newName;
 
                         // 썸네일 이미지 인코딩
-                        const filePath = path.join(__dirname, '..', 'public', data.image_name);
+                        const filePath = path.join(__dirname, '..', 'public', 'images', data.image_name);
                         const fileContent = await fs.readFile(filePath, 'base64');
 
                         const modifiedData = {
@@ -84,20 +83,21 @@ module.exports = {
 
                 // Base64로 인코딩된 이미지 디코딩 및 저장 경로 지정
                 const base64Image = Buffer.from(postData.image_data, 'base64');
-                const savePath = path.join(__dirname, '..', 'public', postData.image_name);
+                const savePath = path.join(__dirname, '..', 'public', 'images', postData.image_name);
 
                 // 디코딩한 이미지 저장
                 await fs.writeFile(savePath, base64Image);
                 console.log('Save Complete : ' + savePath);
+
                 
                 // 리사이즈된 이미지 구분하기 위해 이름 형식 지정 => {클라이언트가 보낸 이미지 이름}_{DB에 저장된 PK}.확장자
                 const renaming = `${postData.image_name.split(".")[0]}_${postData.user_id}_${result.insertId}.jpg`;
 
-                sharp(path.join(__dirname, '..', 'public', postData.image_name))
+                sharp(path.join(__dirname, '..', 'public', 'images', postData.image_name))
                     .resize(64, 64, {fit: 'contain'})  // fit : contain 가로 세로 비율 강제 유지
                     .withMetadata()  // 원본 이미지 메타데이터 포함
                     .toFormat('jpeg', {quality: 100}) // 포맷, 퀄리티 지정
-                    .toFile(path.join(__dirname, '..', 'public', renaming), (err, info) => { // 저장 경로를 첫번째 인수에 지정
+                    .toFile(path.join(__dirname, '..', 'public', 'images', renaming), (err, info) => { // 저장 경로를 첫번째 인수에 지정
                         // 리사이즈 이미지 로컬에 저장
                         if (err) {
                             console.log('Error while resizing - saving image: ', err.message);
@@ -131,7 +131,7 @@ module.exports = {
                     // 원본 이미지 인코딩하여 가져오기
                     const postData = {};
                     const getOriginalImg = async (data) => {
-                        const filePath = path.join(__dirname, '..', 'public', data.image_name);
+                        const filePath = path.join(__dirname, '..', 'public', 'images', data.image_name);
                         const fileContent = await fs.readFile(filePath, 'base64');
 
                         postData['num'] = data.num;
@@ -173,7 +173,7 @@ module.exports = {
                     const getOriginalImg = async (data) => {
                         const originalName = data.image_name;
                         const thumbnail_image = originalName.split(".")[0] + "_" + data.user_id + "_" + data.num + ".jpg";
-                        const filePath = path.join(__dirname, '..', 'public', thumbnail_image);
+                        const filePath = path.join(__dirname, '..', 'public', 'images', thumbnail_image);
                         const fileContent = await fs.readFile(filePath, 'base64');
 
                         postData['num'] = data.num;
