@@ -55,7 +55,7 @@ module.exports = (server, app) =>{
               socket.emit("video save complete", { success: true, fileName: fileName });
 
               // ML에게 비디오 저장 완료됐으니 모델링 작업 시작해도 된다는 메세지 전달
-              io.to(getKeyByValue(who, 'ml')).emit("start modeling", { path: 'data/totoro.MOV' , name: fileName, prompt: videoData.prompt});
+              io.to(getKeyByValue(who, 'ml')).emit("start modeling", { path: filePath , name: fileName, prompt: videoData.prompt});
 
               delete clientHasUUID[socket.id];
             } catch (error) {
