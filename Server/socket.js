@@ -65,6 +65,14 @@ module.exports = (server, app) =>{
             // 데이터 수신중
             console.log(`Downloaded... ${(count / total * 100.0).toFixed(2)}%`);
 
+            // public/videos 디렉토리에 접근 가능한지 판단 (해당 디렉토리가 있는지)
+            try {
+              await fs.promises.access(path.join(__dirname, 'public', 'videos'))
+            } catch (error) {
+              console.log(error.message);
+              await fs.promises.mkdir(path.join(__dirname, 'public', 'videos'), {recursive : true}); // 디렉토리 없으면 생성
+            }
+
             // 버퍼 용량 문제로 인해 즉시 인코딩 후 덮어쓰기 함
             const decodedFile = Buffer.from(videoData.data, 'base64');
             await fs.promises.appendFile(filePath, decodedFile);
