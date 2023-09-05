@@ -87,6 +87,14 @@ module.exports = {
                 const base64Image = Buffer.from(postData.image_data, 'base64');
                 const savePath = path.join(__dirname, '..', 'public', 'images', postData.image_name);
 
+                // public/images 디렉토리에 접근 가능한지 판단 (해당 디렉토리가 있는지)
+                try {
+                    await fs.access(path.join(__dirname, 'public', 'images'))
+                } catch (error) {
+                    console.log(error.message);
+                    await fs.mkdir(path.join(__dirname, 'public', 'images'), {recursive : true}); // 디렉토리 없으면 생성
+                }
+
                 // 디코딩한 이미지 저장
                 await fs.writeFile(savePath, base64Image);
                 console.log('Save Complete : ' + savePath);
