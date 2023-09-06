@@ -7,7 +7,7 @@ Node.js - https://www.nodejs.org - LTS
 MySQL - https://www.mysql.com/downloads/ - MySQL Community Server
 ```
 > If you encounter an error in error number 1251 when working with Node.js and MySQL, use the following methods to resolve.
-> Enter the following command after accessing the MySCL root account
+> Enter the following command after accessing the MySQL root account
 ```sql
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Your PASSWORD';
 ```
