@@ -24,7 +24,7 @@ class Segmentation:
         logits = logits.tolist()
 
         # Skip if failed to predict
-        if not mask or not logits:
+        if not mask.tolist() or not logits:
             return
         
         # Find most confidence mask

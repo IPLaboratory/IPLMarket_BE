@@ -32,9 +32,16 @@ venv.bak/
 # Base Dependencies
 src/
 
+# colmap
+colmap_sparse/
+colmap_text/
+external/
+colmap.db
+
 # nvdiffrecmc
 data/*
 !data/irrmaps/
 !data/tets/
 !data/sphere.obj
 !data/sphere.mtl
+out/
