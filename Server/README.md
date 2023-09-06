@@ -1,9 +1,22 @@
 # IPL_Server_2023
 
+Installing Before Running
+---
+```
+Node.js - https://www.nodejs.org - LTS
+MySQL - https://www.mysql.com/downloads/ - MySQL Community Server
+```
+> If you encounter an error in error number 1251 when working with Node.js and MySQL, use the following methods to resolve.
+> Enter the following command after accessing the MySCL root account
+```sql
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Your PASSWORD';
+```
+
 Install Dependencies
 ---
 ```
 npm install
+npm install nodemon
 ```
 
 Database Settings
@@ -53,6 +66,8 @@ CREATE TABLE users (
 | num                    | int           | NO   | PRI | NULL    | auto_increment |
 | title                  | varchar(100)  | NO   |     | NULL    |                |
 | content                | varchar(1000) | NO   |     | NULL    |                |
+| price                  | varchar(100)  | NO   |     | NULL    |                |
+| video_name             | varchar(100)  | YES  |     | NULL    |                |
 | image_name             | varchar(100)  | YES  |     | NULL    |                |
 | regist_date            | datetime      | NO   |     | NULL    |                |
 | user_id                | varchar(20)   | YES  | MUL | NULL    |                |
@@ -64,30 +79,11 @@ CREATE TABLE board (
     num int NOT NULL PRIMARY KEY AUTO_INCREMENT,
     title varchar(100) NOT NULL,
     content varchar(1000) NOT NULL,
+    price varchar(100) NOT NULL,
+    video_name(100),
     image_name varchar(100),
     regist_date datetime NOT NULL,
     user_id varchar(20),
-    FOREIGN KEY (user_id) REFERENCES users(id)
-);
-```
-
-* likes
-```
-+------------------------+---------------+------+-----+---------+----------------+
-| Field                  | Type          | Null | Key | Default | Extra          |
-+------------------------+---------------+------+-----+---------+----------------+
-| like_id                | int           | NO   | PRI | NULL    | auto_increment |
-| post_num               | int           | NO   | MUL | NULL    |                |
-| user_id                | varchar(20)   | NO   | MUL | NULL    |                |
-+------------------------+---------------+------+-----+---------+----------------+
-```
-
-```sql
-CREATE TABLE likes (
-    like_id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    post_num int NOT NULL,
-    user_id varchar(20) NOT NULL,
-    FOREIGN KEY (post_num) REFERENCES board(num),
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 ```
