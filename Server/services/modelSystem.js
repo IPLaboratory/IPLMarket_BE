@@ -36,7 +36,8 @@ module.exports = {
 
                     // 해당 게시물 업로드 시 VR 모델링 작업에 필요한 영상 파일 이름으로 된 디렉토리있는지 검사
                     // 디렉토리 존재한다면 모델링 작업 완료된 것
-                    const directoryPath = path.join(__dirname, '..', posts.video_name);
+                    const directoryName = posts.video_name.split(".")[0];
+                    const directoryPath = path.join(__dirname, '..', 'public', 'models', directoryName);
 
                     try {
                         await fs.promises.access(directoryPath);
@@ -46,7 +47,7 @@ module.exports = {
                         // vr 로딩에 필요한 파일 인코딩 후 저장할 json
                         const base64EncodingMap = {};
                         // 안드로이드에서 파일들 담아 저장할 디렉토리 명
-                        base64EncodingMap['directory'] = posts.video_name;
+                        base64EncodingMap['directory'] = directoryName;
 
                         // 디렉토리 읽기
                         const files = await fs.promises.readdir(directoryPath);
